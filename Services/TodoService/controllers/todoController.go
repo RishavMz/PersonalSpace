@@ -1,69 +1,59 @@
 package controllers
 
 import (
-	"TodoService/handlers"
 	"TodoService/models"
 
 	"encoding/json"
-	"fmt"
-	"net/http"
-	"strconv"
 
 	"gorm.io/gorm"
 )
 
-func GetAllTodo(w http.ResponseWriter, r *http.Request, dbConn *gorm.DB) {
-	todosJSON, err := handlers.FetchAllTodos(dbConn)
-	if err != nil {
-		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
-		return
+func FetchAllTodos(dbConn *gorm.DB) ([]byte, error) {
+	var todos []models.Todo
+	if err := dbConn.Find(&todos).Error; err != nil {
+		return nil, err
 	}
 
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
-	w.Write(todosJSON)
+	jsonData, err := json.Marshal(todos)
+	if err != nil {
+		return nil, err
+	}
+	return jsonData, nil
 }
 
-func GetTodoByUser(w http.ResponseWriter, r *http.Request, dbConn *gorm.DB) {
-	userIDParam := r.URL.Query().Get("userId")
-	userID, err := strconv.ParseUint(userIDParam, 10, 64)
-	if err != nil {
-		http.Error(w, "Invalid userID parameter", http.StatusBadRequest)
-		return
+func FetchTodosByUser(dbConn *gorm.DB, userID uint64) ([]byte, error) {
+	var todos []models.Todo
+	if err := dbConn.Where("user_id = ?", userID).Find(&todos).Error; err != nil {
+		return nil, err
 	}
 
-	todosJSON, err := handlers.FetchTodosByUser(dbConn, userID)
+	jsonData, err := json.Marshal(todos)
 	if err != nil {
-		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
-		return
+		return nil, err
+	}
+	return jsonData, nil
+}
+
+func CreateTodo(dbConn *gorm.DB, newTodo models.Todo) (uint, error) {
+    if err := dbConn.Create(&newTodo).Error; err != nil {
+        return 0, err
+    }
+    return newTodo.ID, nil
+}
+
+func UpdateTodo(dbConn *gorm.DB, todoID uint64, updatedTodo models.Todo) error {
+	var existingTodo models.Todo
+	if err := dbConn.First(&existingTodo, todoID).Error; err != nil {
+		return err
 	}
 
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
-	w.Write(todosJSON)
+	existingTodo.Title = updatedTodo.Title
+	existingTodo.Description = updatedTodo.Description
+	existingTodo.Priority = updatedTodo.Priority
+	existingTodo.Status = updatedTodo.Status
+
+	if err := dbConn.Save(&existingTodo).Error; err != nil {
+		return err
+	}
+	return nil
 }
-
-func CreateTodo(w http.ResponseWriter, r *http.Request, dbConn *gorm.DB) {
-    var newTodo models.Todo
-    decoder := json.NewDecoder(r.Body)
-    if err := decoder.Decode(&newTodo); err != nil {
-        http.Error(w, "Invalid request payload", http.StatusBadRequest)
-        return
-    }
-
-    id, err := handlers.CreateTodo(dbConn, newTodo)
-    if err != nil {
-        http.Error(w, fmt.Sprintf("Failed to create todo: %v", err), http.StatusInternalServerError)
-        return
-    }
-
-    newTodo.ID = id
-
-    w.Header().Set("Content-Type", "application/json")
-    w.WriteHeader(http.StatusCreated)
-    if err := json.NewEncoder(w).Encode(newTodo); err != nil {
-        http.Error(w, "Internal Server Error", http.StatusInternalServerError)
-        return
-    }
-}
-
