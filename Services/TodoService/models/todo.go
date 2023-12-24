@@ -1,22 +1,16 @@
 package models
 
 import (
-	"time"
-
 	"gorm.io/gorm"
 )
 
 type Todo struct {
     gorm.Model
 
-    ID          uint       `gorm:"primary_key"`
-    Priority    uint       `gorm:"index"`
+    Priority    uint    `gorm:"index;default:3"`
     Title       string
     Description string
-    Status      string      `gorm:"index"`
+    Status      string  `gorm:"index;default:open"`
 
-    CreatedAt   time.Time   `gorm:"not null"`
-    UpdatedAt   time.Time   `gorm:"not null"`
-
-    UserID      uint        `gorm:"not null"`
+    UserID uint         `gorm:"not null"`
 }

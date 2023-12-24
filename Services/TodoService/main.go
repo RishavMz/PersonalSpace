@@ -14,6 +14,6 @@ func main() {
 
 	config.LoadEnvVariables()
 	conn = config.CreateConnection()
-	router = config.CreateRouter()
+	router = config.CreateRouter(conn)
 	config.StartServer(router)
 }

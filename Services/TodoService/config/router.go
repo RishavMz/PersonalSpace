@@ -1,46 +1,22 @@
 package config
 
 import (
-	"encoding/json"
-	"fmt"
+	"TodoService/controllers"
 	"net/http"
 
 	"github.com/gorilla/mux"
-
-	"TodoService/models"
+	"gorm.io/gorm"
 )
 
-var users []models.User
+var dbConn *gorm.DB
 
-type ResponseData struct {
-	Message string `json:"message"`
-}
-
-func CreateRouter() http.Handler {
+func CreateRouter(dbConnection *gorm.DB) http.Handler {
+	dbConn = dbConnection
     router := mux.NewRouter()
 
-	router.HandleFunc("/users", getUsers).Methods("GET")
+	router.HandleFunc("/todo", func(w http.ResponseWriter, r *http.Request) { controllers.GetAllTodo(w, r, dbConn) }).Methods("GET")
+	router.HandleFunc("/todoByUser", func(w http.ResponseWriter, r *http.Request) { controllers.GetTodoByUser(w, r, dbConn) }).Methods("GET")
+	router.HandleFunc("/todo", func(w http.ResponseWriter, r *http.Request) { controllers.CreateTodo(w, r, dbConn) }).Methods("POST")
+
 	return router
-}
-
-func getUsers(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("Getting a list of users")
-	w.Header().Set("Content-Type", "application/json")
-	responseData := ResponseData{
-		Message: "Hello, World!",
-	}
-
-	// Convert the response data to JSON
-	jsonData, err := json.Marshal(responseData)
-	if err != nil {
-		// Handle the error if JSON marshaling fails
-		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
-		return
-	}
-
-	// Set the Content-Type header to application/json
-	w.Header().Set("Content-Type", "application/json")
-
-	// Write the JSON response to the client
-	w.Write(jsonData)
 }

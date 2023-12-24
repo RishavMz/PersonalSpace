@@ -29,11 +29,9 @@ func StartServer(router http.Handler) {
 		Handler: router,
 	}
 
-	// Use a context to handle shutdown
 	_, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
-	// Handle OS signals to initiate a graceful shutdown
 	signalCh := make(chan os.Signal, 1)
 	signal.Notify(signalCh, os.Interrupt)
 
@@ -48,7 +46,6 @@ func StartServer(router http.Handler) {
 		}
 	}()
 
-	// Start the server
 	if err := server.ListenAndServe(); err != nil && err != http.ErrServerClosed {
 		log.Fatalf("[SERVER]: Error starting server: %v\n", err)
 	}

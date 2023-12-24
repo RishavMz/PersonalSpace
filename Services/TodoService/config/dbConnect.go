@@ -20,9 +20,7 @@ func CreateConnection() *gorm.DB {
 		log.Println("[SERVER]: Successfully connected to database")
 	}
 
-	conn.AutoMigrate(&models.User{})
-	conn.AutoMigrate(&models.Todo{})
+	conn.AutoMigrate(&models.User{}, &models.Todo{})
 
 	return conn
 }
-
