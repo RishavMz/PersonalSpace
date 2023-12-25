@@ -9,7 +9,6 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/gorilla/mux"
 	"gorm.io/gorm"
 )
 
@@ -69,20 +68,13 @@ func CreateTodo(w http.ResponseWriter, r *http.Request, dbConn *gorm.DB) {
 }
 
 func UpdateTodo(w http.ResponseWriter, r *http.Request, dbConn *gorm.DB) {
-	vars := mux.Vars(r)
-	todoID, err := strconv.ParseUint(vars["id"], 10, 64)
-	if err != nil {
-		http.Error(w, "Invalid todo ID", http.StatusBadRequest)
-		return
-	}
 	var updatedTodo models.Todo
 	decoder := json.NewDecoder(r.Body)
 	if err := decoder.Decode(&updatedTodo); err != nil {
 		http.Error(w, "Invalid request payload", http.StatusBadRequest)
 		return
 	}
-
-	if err := controllers.UpdateTodo(dbConn, todoID, updatedTodo); err != nil {
+	if err := controllers.UpdateTodo(dbConn, updatedTodo); err != nil {
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}

@@ -41,9 +41,9 @@ func CreateTodo(dbConn *gorm.DB, newTodo models.Todo) (uint, error) {
     return newTodo.ID, nil
 }
 
-func UpdateTodo(dbConn *gorm.DB, todoID uint64, updatedTodo models.Todo) error {
+func UpdateTodo(dbConn *gorm.DB, updatedTodo models.Todo) error {
 	var existingTodo models.Todo
-	if err := dbConn.First(&existingTodo, todoID).Error; err != nil {
+	if err := dbConn.First(&existingTodo, updatedTodo.ID).Error; err != nil {
 		return err
 	}
 
@@ -51,7 +51,6 @@ func UpdateTodo(dbConn *gorm.DB, todoID uint64, updatedTodo models.Todo) error {
 	existingTodo.Description = updatedTodo.Description
 	existingTodo.Priority = updatedTodo.Priority
 	existingTodo.Status = updatedTodo.Status
-
 	if err := dbConn.Save(&existingTodo).Error; err != nil {
 		return err
 	}
