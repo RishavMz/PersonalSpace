@@ -1,0 +1,24 @@
+{
+  "name": "homeserver",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "nodemon app.js",
+    "format": "prettier --write \"**/*.js\"",
+    "watch": "nodemon --exec npm run format --watch"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "body-parser": "^1.20.2",
+    "ejs": "^3.1.10",
+    "express": "^4.19.2",
+    "fs-extra": "^11.2.0",
+    "multer": "^1.4.5-lts.1",
+    "nodemon": "^3.1.4"
+  },
+  "devDependencies": {
+    "prettier": "^3.3.2"
+  }
+}

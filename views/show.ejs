@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Uploaded Images - <%= folderName %></title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+      margin: 0;
+      padding: 20px;
+      background-color: #f0f0f0;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .image-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .image-list img {
+      width: 100%;
+      height: auto;
+      max-width: 100%;
+      max-height: 200px;
+      object-fit: cover;
+      border-radius: 8px;
+    }
+
+    .pagination {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .pagination a {
+      display: inline-block;
+      padding: 8px 16px;
+      background-color: #e0e0e0;
+      text-decoration: none;
+      color: #333;
+      border-radius: 4px;
+      margin-right: 10px;
+    }
+
+    .pagination a:hover {
+      background-color: #ccc;
+    }
+
+    @media screen and (max-width: 600px) {
+      .container {
+        padding: 10px;
+      }
+
+      .image-list {
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      }
+
+      .image-list img {
+        max-height: 150px;
+      }
+
+      .pagination a {
+        font-size: 14px;
+        padding: 6px 12px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Uploaded Images - <%= folderName %></h1>
+    <div class="image-list">
+      <% images.forEach(image => { %>
+        <img src="/uploads/<%= folderName %>/<%= image %>" alt="<%= image %>">
+      <% }); %>
+    </div>
+    <div class="pagination">
+      <% if (currentPage > 1) { %>
+        <a href="/images/<%= folderName %>?page_no=<%= currentPage - 1 %>&page_size=6">Previous</a>
+      <% } %>
+      <% if (currentPage < totalPages) { %>
+        <a href="/images/<%= folderName %>?page_no=<%= currentPage + 1 %>&page_size=6">Next</a>
+      <% } %>
+    </div>
+    <a href="/">Back to Upload</a>
+  </div>
+</body>
+</html>

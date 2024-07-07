@@ -1,3 +1,37 @@
-log/
+# Node modules
+node_modules/
 
-*.exe
+# Logs
+logs
+*.log
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Dependency directories
+vendor/
+
+# Optional npm cache directory
+.npm
+
+# Optional eslint cache
+.eslintcache
+
+# Environment variables
+.env
+
+# OS or editor files
+.DS_Store
+Thumbs.db
+
+# IDE files
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+
+# npm
+npm-debug.log*

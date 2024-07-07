@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Image Upload</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+      padding: 20px;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      text-align: center;
+    }
+
+    form {
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 10px;
+    }
+
+    input[type="text"],
+    input[type="file"],
+    button {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 10px;
+      box-sizing: border-box;
+    }
+
+    button {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+
+    ul {
+      list-style-type: none;
+      padding: 0;
+    }
+
+    li {
+      margin-bottom: 5px;
+    }
+
+    a {
+      display: block;
+      padding: 10px;
+      background-color: #f0f0f0;
+      text-decoration: none;
+      color: #333;
+      border-radius: 5px;
+    }
+
+    a:hover {
+      background-color: #ddd;
+    }
+
+    @media screen and (max-width: 600px) {
+      body {
+        padding: 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>Upload Images</h1>
+  <form action="/upload" method="POST" enctype="multipart/form-data">
+    <label for="folderName">Folder Name:</label>
+    <input type="text" id="folderName" name="folderName" placeholder="Enter folder name">
+    <input type="file" name="images" multiple>
+    <button type="submit">Upload</button>
+  </form>
+  <h2>View Uploaded Folders</h2>
+  <ul>
+    <% folders.forEach(folder => { %>
+      <li><a href="/images/<%= folder %>"><%= folder %></a></li>
+    <% }); %>
+  </ul>
+</body>
+</html>
